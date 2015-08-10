@@ -11,7 +11,6 @@ use Behat\Testwork\Tester\Result\ExceptionResult;
 
 class FailureExpoListener implements EventSubscriberInterface
 {
-    private $id;
     private $mink;
     private $parameters;
     private $observers;
@@ -24,7 +23,6 @@ class FailureExpoListener implements EventSubscriberInterface
      */
     public function __construct(Mink $mink, array $parameters)
     {
-        $this->id = time();
         $this->mink       = $mink;
         $this->parameters = $parameters;
 
@@ -40,6 +38,14 @@ class FailureExpoListener implements EventSubscriberInterface
         );
     }
 
+    private function getTestUniqueDescription(AfterStepTested $event)
+    {
+        $filename = basename($event->getFeature()->getFile(), '.feature');
+        $dirname = basename(dirname($event->getFeature()->getFile()));
+        
+        return $dirname.'-'.$filename.':'.$event->getStep()->getLine();
+    }
+
     public function exposeFailInfo(AfterStepTested $event)
     {
         $testResult = $event->getTestResult();
@@ -50,7 +56,10 @@ class FailureExpoListener implements EventSubscriberInterface
             return;
         }
 
+        $description = $this->getTestUniqueDescription($event);
+        
         foreach ($this->observers as $observer) {
+            $observer->setTestDescription($description);
             $observer->expose();
         }
     }

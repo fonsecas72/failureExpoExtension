@@ -6,18 +6,10 @@ use Behat\Mink\Mink;
 
 class ScreenshotExpound extends Expound
 {
-    public $id;
-
-    public function __construct(Mink $mink, $options = [])
-    {
-        parent::__construct($mink, $options);
-        $this->id = time();
-    }
-
     public function expose()
     {
+        $screenshotFilename = $this->description.'.png';
         $screenshotContent = $this->mink->getSession()->getScreenshot();
-        $screenshotFilename = 'screenshot_'.$this->id.'.png';
         $destination = '';
         file_put_contents(
             $destination.$screenshotFilename,

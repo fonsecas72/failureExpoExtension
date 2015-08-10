@@ -8,8 +8,18 @@ abstract class Expound
 {
     /** @var Mink */
     public $mink;
-    
     public $globaldestinationPath;
+    public $description;
+
+    public function getTestDescription()
+    {
+        return $this->description;
+    }
+
+    public function setTestDescription($description)
+    {
+        $this->description = $description;
+    }
 
     public function __construct(Mink $mink, $options = [])
     {
