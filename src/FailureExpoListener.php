@@ -66,6 +66,7 @@ class FailureExpoListener implements EventSubscriberInterface
                 echo $exc->getTraceAsString();
             }
         }
+        echo PHP_EOL;
     }
 
     private function isTestFailed(TestResult $testResult)
