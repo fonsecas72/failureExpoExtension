@@ -63,7 +63,7 @@ class FailureExpoListener implements EventSubscriberInterface
             try {
                 $observer->expose();
             } catch (\Exception $exc) {
-                echo $exc->getTraceAsString();
+                echo PHP_EOL.$exc->getMessage();
             }
         }
         echo PHP_EOL;
