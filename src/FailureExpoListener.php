@@ -57,12 +57,17 @@ class FailureExpoListener implements EventSubscriberInterface
         }
 
         $description = $this->getTestUniqueDescription($event);
-        
+
         foreach ($this->observers as $observer) {
             $observer->setTestDescription($description);
-            $observer->expose();
+            try {
+                $observer->expose();
+            } catch (\Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
         }
     }
+
     private function isTestFailed(TestResult $testResult)
     {
         return $testResult->isPassed() === false && TestResult::FAILED === $testResult->getResultCode();
