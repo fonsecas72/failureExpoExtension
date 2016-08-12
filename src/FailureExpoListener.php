@@ -42,8 +42,19 @@ class FailureExpoListener implements EventSubscriberInterface
     {
         $filename = basename($event->getFeature()->getFile(), '.feature');
         $dirname = basename(dirname($event->getFeature()->getFile()));
-        
-        return $dirname.'-'.$filename.':'.$event->getStep()->getLine();
+
+        $scenarios = $event->getFeature()->getScenarios();
+        $failingStepLine = $event->getStep()->getLine();
+        $failingScenarioLine = 'nd';
+        foreach ($scenarios as $scenario) {
+            $curentScenarioline = $scenario->getLine();
+            if ($failingStepLine < $curentScenarioline) {
+                break;
+            }
+            $failingScenarioLine = $curentScenarioline;
+        }
+
+        return $dirname.'-'.$filename.':'.$failingScenarioLine;
     }
 
     public function exposeFailInfo(AfterStepTested $event)
